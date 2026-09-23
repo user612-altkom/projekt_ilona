@@ -20,8 +20,11 @@ Ten plik czyta Copilot w czacie, w CLI i w code review. Trzymaj się poniższych
 
 ## Proces
 
+- Trzymaj się zawsze zasad i danych z `README.md` i `BRIEF.md`. Nie zmieniaj głównych danych biznesowych (np. nazw i zapisu wskaźników POLSTR/WIBOR, wartości liczby kontrolnej, zakresu MVP) bez wyraźnego polecenia — nawet w ramach „porządkowania” czy ujednolicania nazewnictwa. Przy wątpliwości zapytaj zamiast poprawiać samodzielnie.
 - Małe commity, jeden PR na fazę z `tasks.md`. Po zakończeniu fazy zatrzymaj się i pokaż diff. Nie zaczynaj kolejnej fazy bez polecenia.
 - Nie dodawaj zależności bez zapytania. Jeśli zależność wydaje się potrzebna, uzasadnij to jednym zdaniem i poczekaj na decyzję.
 - Nie edytuj plików w `dane/` bez wyraźnego polecenia. Testy je wczytują.
 - Nie edytuj `.specify/` ani `.github/skills/` poza tym, co robią skille spec-kit.
 - Przed zgłoszeniem gotowości uruchom `npm test`, `npm run typecheck` i `npm run build` i pokaż wynik. Vercel buduje produkcję tym samym `next build`, więc czerwony build lokalnie to czerwony deploy.
+- Po każdym `git commit` i `git push` wyświetl krótki komunikat (hash commita, jednolinijkowy opis, czy push się udał).
+- Przed `gh pr create` zapytaj o potwierdzenie i poczekaj na zgodę, nie otwieraj PR automatycznie.

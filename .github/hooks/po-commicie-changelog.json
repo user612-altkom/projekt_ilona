@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "powershell -ExecutionPolicy Bypass -File \"./.github/hooks/scripts/po-commicie-changelog.ps1\"",
+        "timeout": 10
+      }
+    ]
+  }
+}
