@@ -87,3 +87,13 @@ Wpisy pogrupowane wg faz z `specs/001-harmonogram-splat-polstr/tasks.md`, po pol
 - Reguła w `.github/copilot-instructions.md`: spójne angielskie nazwy plików customizacji
   (agenci, skille, prompty), nazwy domenowe w kodzie zostają po polsku.
 
+### DODATKOWE WYMAGANIE - WYBÓR: CR-A: Wybór skutku nadpłaty: skrócenie okresu albo obniżenie raty
+
+- Pole `tryb` w typie `Nadplata` (`src/domena/harmonogram.ts`) stało się opcjonalne — brak
+  trybu oznacza domyślnie „skroc-okres”; analogicznie złagodzono walidację w
+  `app/api/harmonogram/route.ts` (tryb nie jest już wymagany).
+- 4 nowe testy w `tests/harmonogram.test.ts` z dokładnymi liczbami z karty zmiany (kredyt
+  300 000 zł, 240 rat, WIBOR 4,55% + marża 2,11 pp, nadpłata 30 000 zł po 1. racie).
+- Sekcja „Nadpłaty” w `README.md` opisująca konwencję „nadpłata po racie miesiąca, odsetki
+  od salda sprzed nadpłaty”.
+

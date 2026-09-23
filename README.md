@@ -109,6 +109,10 @@ git push -u origin main
 
 Katalog `dane/` zawiera dwie serie wskaźników w formacie JSON: `polstr-1m.json` (miesięcznie, od lipca 2025) i `wibor-3m.json` (kwartalnie, od 2020). Każdy plik ma pola `wskaznik`, `opis`, `uwaga`, `zrodla` i `wartosci` z listą wpisów `{ "od": "YYYY-MM-DD", "stopa": 0.0355 }`. Stopa jest ułamkiem, nie procentem. Wpis obowiązuje od dnia `od` do dnia przed kolejnym wpisem, a po ostatnim wpisie serii obowiązuje ostatnia znana wartość. Wartości są ilustracyjne i przybliżone, szczegóły w polu `uwaga`. Nie edytuj tych plików w trakcie ćwiczenia, testy je wczytują. W kodzie serie są dostępne przez `seriaWskaznika()` z `src/dane/wskazniki.ts`.
 
+## Nadpłaty
+
+Nadpłata jest przypisana do konkretnej raty (`miesiac` = numer raty, licząc od 1) i księgowana **po** regularnej racie tego miesiąca: odsetki tej raty liczą się od salda sprzed nadpłaty, a saldo pomniejsza się o nadpłatę dopiero po odjęciu regularnej części kapitałowej. Pole `tryb` jest opcjonalne — brak `tryb` oznacza „skróć okres” (CR-A, [dodatkowe_wymagania.md](dodatkowe_wymagania.md)). „Obniż ratę” przelicza ratę na pozostałe raty od salda po nadpłacie przy niezmienionej ich liczbie; „skróć okres” zostawia ratę bez zmian i kończy harmonogram wcześniej, z wyrównaniem na ostatniej racie.
+
 ## Spec-kit
 
 Komendy wywołujesz w czacie Copilota w VS Code (tryb Agent) albo w Copilot CLI. Każda komenda to skill z katalogu `.github/skills/speckit-*/SKILL.md`, skrypty pomocnicze leżą w `.specify/scripts/powershell/`, szablony artefaktów w `.specify/templates/`.

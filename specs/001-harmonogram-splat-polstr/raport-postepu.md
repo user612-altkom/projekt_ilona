@@ -118,3 +118,22 @@ To ostatnia faza z `tasks.md` — MVP jest kompletny.
   przechodzi
 - Suggested PR title (po polsku): faza 7: ekran kalkulatora w przeglądarce z eksportem CSV
 
+---
+
+## DODATKOWE WYMAGANIE - WYBÓR: CR-A: Wybór skutku nadpłaty: skrócenie okresu albo obniżenie raty
+
+- Completed tasks: brak numeracji T0xx — karta zmiany z `dodatkowe_wymagania.md` po MVP, nie
+  zadanie z `tasks.md`; branch `cr-a-tryb-nadplaty`, zmiany niescommitowane
+- Changed files: `src/domena/harmonogram.ts` (pole `tryb` w `Nadplata` opcjonalne, domyślnie
+  `"skroc-okres"`), `app/api/harmonogram/route.ts` (złagodzona walidacja `parsujNadplaty`
+  dopuszczająca brak `tryb`), `tests/harmonogram.test.ts` (4 nowe testy z liczbami z karty
+  zmiany: rata przed nadpłatą, saldo po 1. racie i nadpłacie, „obniż ratę” z nową ratą 2 038,11 zł,
+  „skróć okres” z 196 ratami i ostatnią ratą wyrównującą 2 200,53 zł), `README.md` (nowa sekcja
+  „Nadpłaty” z konwencją księgowania: nadpłata po racie miesiąca, odsetki liczone od salda
+  sprzed nadpłaty)
+- Tests: PASS, 23/23; `npm run typecheck`, `npm run lint` i `npm run build` czyste
+- spec.md checkpoint: met — User Story 4 (Nadpłaty kredytu, kryteria akceptacji 1 i 2 z linii
+  97-101) pokryta już wcześniej w Fazie 6, a ta zmiana dokłada domyślny tryb „skróć okres” przy
+  braku pola zgodnie z treścią zgłoszenia CR-A, bez naruszenia istniejących scenariuszy
+- Suggested PR title (po polsku): CR-A: domyślny tryb nadpłaty „skróć okres” i łagodniejsza walidacja
+
