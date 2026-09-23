@@ -152,6 +152,9 @@ ratę 2 494,72 zł oraz umożliwia pobranie CSV.
       poprawić ewentualne błędy
 - [ ] T021 Przejść scenariusze z `quickstart.md` od początku do końca i potwierdzić liczbę
       kontrolną na produkcji (Vercel)
+- [ ] T022 [P] Dodać skrypt `skrypty/eksport-csv.ts` (lub `.ps1`, do ustalenia przy implementacji):
+      wywołuje `policzHarmonogram` z parametrów CLI i zapisuje tabelę rat do pliku `.csv`, tym
+      samym formatem kolumn co ekran/API (FR-011) — depends on T006, bez nowych zależności npm
 
 ---
 

@@ -167,6 +167,10 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
 - **FR-010**: Ekran www MUSI udostępniać formularz z polami wejściowymi z FR-001, przycisk
   „Policz”, wynik (rata pierwsza, rata ostatnia, suma odsetek, tabela rat) oraz eksport tabeli
   rat do pliku CSV po stronie przeglądarki.
+- **FR-011**: System MUSI dodatkowo udostępniać eksport tej samej tabeli rat do pliku CSV z
+  linii komend (skrypt w `skrypty/`, wywołanie funkcji domenowej z parametrami, zapis do pliku
+  `.csv`), niezależnie od eksportu CSV w przeglądarce z FR-010. Rozszerzenie zakresu MVP
+  potwierdzone przez właściciela produktu 2026-09-23.
 
 ### Key Entities
 
@@ -205,3 +209,5 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
 - Produkcyjne środowisko (Vercel, GitHub Actions) jest już skonfigurowane i nie jest częścią
   zakresu tej funkcji.
 - Waluta to złoty polski (PLN), kwoty zaokrąglane do grosza.
+- Eksport CSV z CLI (FR-011) używa tego samego formatu kolumn co tabela rat z API/ekranu
+  (numer, data, kapitał, odsetki, rata, saldo); nie wymaga nowych zależności npm.
