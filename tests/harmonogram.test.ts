@@ -126,3 +126,51 @@ describe('policzHarmonogram — zmienny wskaźnik w trakcie spłaty (US3)', () =
   });
 });
 
+describe('policzHarmonogram — nadpłaty (US4)', () => {
+  beforeEach(() => {
+    vi.mocked(stopaNaDzien).mockReturnValue(0.0355);
+  });
+
+  const bazowe = {
+    kwotaGr: 100_000_00,
+    liczbaRat: 12,
+    marza: 0.02,
+    wskaznik: 'POLSTR_1M' as const,
+    pierwszaRata: '2026-10-10',
+  };
+
+  it('tryb „obniż ratę”: saldo maleje o nadpłatę, rata od kolejnego okresu jest przeliczona, liczba rat bez zmian', () => {
+    const bezNadplaty = policzHarmonogram({ ...bazowe, typRat: 'rowne', nadplaty: [] });
+    const zNadplata = policzHarmonogram({
+      ...bazowe,
+      typRat: 'rowne',
+      nadplaty: [{ miesiac: 3, kwotaGr: 10_000_00, tryb: 'obniz-rate' }],
+    });
+
+    expect(zNadplata.raty).toHaveLength(bezNadplaty.raty.length);
+    expect(zNadplata.raty[2]!.nadplataGr).toBe(10_000_00);
+    expect(zNadplata.raty[2]!.saldoGr).toBe(bezNadplaty.raty[2]!.saldoGr - 10_000_00);
+    expect(zNadplata.raty[3]!.rataGr).toBeLessThan(bezNadplaty.raty[3]!.rataGr);
+
+    const sumaKapitaluINadplat = zNadplata.raty.reduce((suma, rata) => suma + rata.kapitalGr + rata.nadplataGr, 0);
+    expect(sumaKapitaluINadplat).toBe(bazowe.kwotaGr);
+  });
+
+  it('tryb „skróć okres”: saldo maleje o nadpłatę, rata bez zmian, liczba pozostałych rat maleje', () => {
+    const bezNadplaty = policzHarmonogram({ ...bazowe, typRat: 'rowne', nadplaty: [] });
+    const zNadplata = policzHarmonogram({
+      ...bazowe,
+      typRat: 'rowne',
+      nadplaty: [{ miesiac: 3, kwotaGr: 10_000_00, tryb: 'skroc-okres' }],
+    });
+
+    expect(zNadplata.raty.length).toBeLessThan(bezNadplaty.raty.length);
+    expect(zNadplata.raty[2]!.nadplataGr).toBe(10_000_00);
+    expect(zNadplata.raty[3]!.rataGr).toBe(bezNadplaty.raty[3]!.rataGr);
+
+    const sumaKapitaluINadplat = zNadplata.raty.reduce((suma, rata) => suma + rata.kapitalGr + rata.nadplataGr, 0);
+    expect(sumaKapitaluINadplat).toBe(bazowe.kwotaGr);
+  });
+});
+
+

@@ -112,14 +112,14 @@ niezmienionej racie.
 
 ### Testy dla User Story 4
 
-- [ ] T013 [P] [US4] Test nadpłaty w trybie „obniż ratę” w `tests/harmonogram.test.ts`
-- [ ] T014 [P] [US4] Test nadpłaty w trybie „skróć okres” w `tests/harmonogram.test.ts`
+- [x] T013 [P] [US4] Test nadpłaty w trybie „obniż ratę” w `tests/harmonogram.test.ts`
+- [x] T014 [P] [US4] Test nadpłaty w trybie „skróć okres” w `tests/harmonogram.test.ts`
 
 ### Implementacja dla User Story 4
 
-- [ ] T015 [US4] Zaimplementować obsługę `nadplaty` (oba tryby) w `src/domena/harmonogram.ts`
+- [x] T015 [US4] Zaimplementować obsługę `nadplaty` (oba tryby) w `src/domena/harmonogram.ts`
       — depends on T012
-- [ ] T016 [US4] Rozszerzyć parsowanie query string o parametr `nadplaty` (JSON) w
+- [x] T016 [US4] Rozszerzyć parsowanie query string o parametr `nadplaty` (JSON) w
       `app/api/harmonogram/route.ts` — depends on T007
 
 **Checkpoint**: cała logika domenowa (US1–US4) kompletna i przetestowana.
