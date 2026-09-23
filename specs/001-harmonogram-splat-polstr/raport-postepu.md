@@ -88,3 +88,17 @@ T0xx, brak commita dedykowanego tej fazie.
   „skróć okres” skraca harmonogram przy niezmienionej racie) pokryte testami T013-T014
 - Suggested PR title (po polsku): faza 6: nadpłaty w trybie obniż ratę i skróć okres
 
+---
+
+## Faza 7: Ekran kalkulatora w przeglądarce (User Story 5)
+
+- Completed tasks: T017-T019 (3)
+- Changed files: `app/page.tsx` (nowy komponent `'use client'` z formularzem, wynikiem, tabelą
+  rat i eksportem CSV, układ dwukolumnowy) — zmiany na branchu `faza-7-ekran`, jeszcze
+  niescommitowane
+- Tests: PASS, 19/19 (bez zmian w logice domenowej)
+- spec.md checkpoint: met — User Story 5 (formularz z liczbą kontrolną pokazuje ratę 2 494,72 zł
+  i umożliwia eksport CSV), `npm run typecheck` i `npm run lint` czyste, `npm run build`
+  przechodzi
+- Suggested PR title (po polsku): faza 7: ekran kalkulatora w przeglądarce z eksportem CSV
+

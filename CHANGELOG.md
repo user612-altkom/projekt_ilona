@@ -55,6 +55,17 @@ Wpisy pogrupowane wg faz z `specs/001-harmonogram-splat-polstr/tasks.md`, po pol
   spadnie do zera.
 - 2 nowe testy w `tests/harmonogram.test.ts` (po jednym na każdy tryb nadpłaty).
 
+### Faza 7: User Story 5 — ekran kalkulatora w przeglądarce
+
+- `app/page.tsx` jako komponent `'use client'` z Tailwind: dwukolumnowy układ (formularz
+  parametrów kredytu i nadpłat po lewej, wynik po prawej), pobieranie danych przez
+  `fetch('/api/harmonogram?...')`.
+- Wynik obejmuje ratę pierwszą/ostatnią, sumę odsetek, przewijaną tabelę rat oraz eksport
+  CSV generowany po stronie przeglądarki.
+- T017–T019 w `tasks.md` odznaczone jako zrobione, z notatką że zamiast komponentu z Claude
+  Design użyto szkicu wygenerowanego bezpośrednio przez agenta na wyraźne polecenie
+  użytkownika.
+
 ### Narzędzia pomocnicze (poza fazami z tasks.md)
 
 - Subagent `changelog` (aktualizuje ten plik) i `phase-report` (generuje raport z

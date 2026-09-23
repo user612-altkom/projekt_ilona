@@ -135,11 +135,12 @@ ratę 2 494,72 zł oraz umożliwia pobranie CSV.
 
 ### Implementacja dla User Story 5
 
-- [ ] T017 [US5] Wkleić dostarczony komponent React (Claude Design) jako `app/page.tsx` z
-      dyrektywą `'use client'` w pierwszej linii
-- [ ] T018 [US5] Podłączyć formularz do `fetch('/api/harmonogram?...')` w `app/page.tsx` wg
+- [x] T017 [US5] Wkleić dostarczony komponent React (Claude Design) jako `app/page.tsx` z
+      dyrektywą `'use client'` w pierwszej linii — zamiast eksportu z Claude Design użyto
+      kolorowego szkicu wygenerowanego bezpośrednio przez agenta, na wyraźne polecenie
+- [x] T018 [US5] Podłączyć formularz do `fetch('/api/harmonogram?...')` w `app/page.tsx` wg
       kontraktu z `contracts/harmonogram-api.md` — depends on T016, T017
-- [ ] T019 [US5] Ręcznie zweryfikować w przeglądarce liczbą kontrolną i eksport CSV, wg
+- [x] T019 [US5] Ręcznie zweryfikować w przeglądarce liczbą kontrolną i eksport CSV, wg
       `quickstart.md` — depends on T018
 
 **Checkpoint**: MVP kompletny end-to-end (ekran → API → domena).
