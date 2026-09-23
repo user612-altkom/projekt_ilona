@@ -40,7 +40,9 @@ stopą 5,66% rocznie zwraca ratę 2 494,72 zł (±0,05 zł) i ostatnią ratę 2 
 
 ### Testy dla User Story 1 (napisać najpierw, upewnić się że nie przechodzą)
 
-- [ ] T004 [P] [US1] Test liczby kontrolnej (rata równa, stopa stała) w `tests/harmonogram.test.ts`
+- [ ] T004 [P] [US1] Test liczby kontrolnej (rata równa, stopa stała) w `tests/harmonogram.test.ts` —
+      stałą wartość wskaźnika 0,0355 uzyskać przez zamockowanie `src/dane/wskazniki.ts`
+      (`vi.mock`), nie przez nowy parametr wejściowy (patrz spec.md, sekcja Assumptions)
 - [ ] T005 [P] [US1] Test: suma części kapitałowych wszystkich rat równa kwocie kredytu co do
       grosza, w `tests/harmonogram.test.ts`
 
@@ -48,6 +50,8 @@ stopą 5,66% rocznie zwraca ratę 2 494,72 zł (±0,05 zł) i ostatnią ratę 2 
 
 - [ ] T006 [US1] Zaimplementować `policzHarmonogram` dla `typRat: 'rowne'` ze stałą stopą
       (bez zależności od `src/dane/wskazniki.ts`) w `src/domena/harmonogram.ts` — depends on T002
+- [ ] T006a [US1] Zastąpić `tests/smoke.test.ts` (oczekuje wyjątku „nie zaimplementowano”)
+      testem zgodnym z działającą implementacją, żeby `npm test` przechodziło po T006 — depends on T006
 - [ ] T007 [US1] Podłączyć wynik w `app/api/harmonogram/route.ts`: zamiast 501 zwracać JSON z
       `policzHarmonogram(...)` — depends on T006
 

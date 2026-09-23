@@ -2,7 +2,7 @@
 $stdin = [Console]::In.ReadToEnd()
 if ($stdin -match 'git(\.exe)?\s+(-\S+\s+)*commit\b') {
     $output = @{
-        systemMessage = "Wykryto git commit. Uruchom subagenta 'changelog' (.github/agents/changelog.agent.md), zeby dopisac krotki wpis do CHANGELOG.md."
+        systemMessage = "Wykryto git commit. Uruchom subagenta 'changelog' (.github/agents/changelog.agent.md), żeby dopisać krótki wpis do CHANGELOG.md."
     } | ConvertTo-Json -Compress
     Write-Output $output
 }

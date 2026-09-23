@@ -71,7 +71,8 @@ którym wskaźnik się zmienił.
 
 1. **Given** seria wskaźnika POLSTR 1M ze zmianą wartości w trakcie spłaty, **When** liczony
    jest harmonogram, **Then** oprocentowanie okresu = wartość wskaźnika obowiązująca w dniu
-   raty + marża, a zmiana jest widoczna od raty następującej po zmianie.
+   raty + marża, a zmiana jest widoczna już od raty przypadającej dokładnie w dniu zmiany
+   (włącznie) — granica wskaźnika jest domknięta z lewej strony (`od <= data raty`).
 2. **Given** data raty wykraczająca poza ostatni wpis serii wskaźnika, **When** liczony jest
    ten okres, **Then** stosowana jest ostatnia znana wartość wskaźnika.
 3. **Given** wybrany wskaźnik WIBOR 3M, **When** liczony jest harmonogram, **Then**
@@ -125,12 +126,17 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
 
 ### Edge Cases
 
-- Co się dzieje, gdy nadpłata przypada na ostatnią ratę albo przekracza pozostałe saldo?
-- Jak system zachowuje się, gdy data pierwszej raty wypada przed pierwszym wpisem serii
-  wskaźnika (brak danych na ten dzień)?
-- Co się dzieje przy liczbie rat równej 1 (brak przyszłych okresów do przeliczenia)?
-- Jak zaokrąglenia w kolejnych ratach są rozkładane, żeby suma części kapitałowych zawsze
-  zgadzała się z kwotą kredytu co do grosza?
+- Nadpłata przekraczająca pozostałe saldo jest ograniczana do wysokości salda — kredyt zostaje
+  spłacony w całości w tym okresie, a pozostałe raty znikają z harmonogramu (dotyczy to też
+  nadpłaty przypadającej na ostatnią ratę).
+- Gdy data pierwszej raty wypada przed pierwszym wpisem serii wskaźnika, stosowana jest
+  najwcześniejsza dostępna wartość serii — symetrycznie do reguły z FR-004 (ostatnia znana
+  wartość po końcu serii).
+- Przy liczbie rat równej 1 jedyna rata obejmuje całą kwotę kredytu jako część kapitałową i
+  odsetki za jeden okres; nie ma dalszych okresów do przeliczenia ani wyrównania.
+- Zaokrąglenia w kolejnych ratach nie są rozkładane pojedynczo — cała różnica wynikająca z
+  zaokrągleń trafia do części kapitałowej ostatniej raty (FR-008), tak żeby suma części
+  kapitałowych zawsze zgadzała się z kwotą kredytu co do grosza.
 
 ## Requirements *(mandatory)*
 
@@ -153,7 +159,9 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
   niezmienionej liczbie pozostałych rat) i „skróć okres” (skraca liczbę pozostałych rat przy
   niezmienionej racie).
 - **FR-008**: System MUSI zaokrąglać kwoty do grosza i tak dobierać ostatnią ratę, aby suma
-  części kapitałowych wszystkich rat była równa kwocie kredytu.
+  części kapitałowych regularnych rat plus suma nadpłat była równa kwocie kredytu. Nadpłata
+  jest osobną pozycją dołączoną do raty danego okresu (patrz encja Rata), nie jest wliczana do
+  jej regularnej części kapitałowej.
 - **FR-009**: `GET /api/harmonogram` MUSI zwracać w JSON pełną tabelę rat (numer, data, część
   kapitałowa, część odsetkowa, rata, saldo po spłacie) i sumę odsetek za cały okres.
 - **FR-010**: Ekran www MUSI udostępniać formularz z polami wejściowymi z FR-001, przycisk
@@ -166,8 +174,8 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
   nadpłat — dane wejściowe jednego wyliczenia harmonogramu.
 - **Wskaźnik**: seria wartości stopy referencyjnej (POLSTR 1M albo WIBOR 3M) w czasie, z datą
   obowiązywania każdej wartości.
-- **Rata**: numer, data, część kapitałowa, część odsetkowa, wysokość raty, saldo pozostałe po
-  spłacie — jeden wiersz harmonogramu.
+- **Rata**: numer, data, część kapitałowa, część odsetkowa, wysokość raty, opcjonalna nadpłata
+  tego okresu, saldo pozostałe po spłacie (uwzględniające nadpłatę) — jeden wiersz harmonogramu.
 - **Nadpłata**: miesiąc, kwota, tryb (obniż ratę albo skróć okres) — modyfikator wpływający na
   dalszy przebieg harmonogramu od danego okresu.
 
@@ -188,6 +196,10 @@ kliknięcie „Policz” pokazuje ratę 2 494,72 zł oraz umożliwia pobranie pl
 
 - Wartość wskaźnika na dany okres jest brana wprost z danych źródłowych (`dane/*.json`); nie
   składamy dziennych stawek wstecz za okres odsetkowy — to świadome uproszczenie MVP.
+- Test z liczbą kontrolną (stała stopa 0,0355 wprost, nie z pliku — patrz BRIEF.md) nie wymaga
+  nowego pola wejściowego na stałą stopę: test podmienia źródło serii wskaźnika (mock modułu
+  `src/dane/wskazniki.ts`) tak, żeby dla wybranego wskaźnika zwracał stałą wartość 0,0355 w
+  całym okresie spłaty. Publiczny kontrakt `ParametryKredytu`/API nie ma pola na stałą stopę.
 - Wygląd ekranu (`app/page.tsx`) zostanie dostarczony jako gotowy komponent React z Tailwindem
   (z Claude Design); ta specyfikacja opisuje jego zachowanie i dane, nie wygląd wizualny.
 - Produkcyjne środowisko (Vercel, GitHub Actions) jest już skonfigurowane i nie jest częścią

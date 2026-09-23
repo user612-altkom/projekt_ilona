@@ -22,13 +22,13 @@ npm run dev
 Otwórz w przeglądarce:
 
 ```
-http://localhost:3000/api/harmonogram?kwota=400000&liczbaRat=300&pierwszaRata=2026-10-10&marza=2.11&typRat=rowne&wskaznik=polstr-1m
+http://localhost:3000/api/harmonogram?kwota=400000&liczbaRat=300&pierwszaRata=2026-10-10&marza=2.11&typRat=rowne&wskaznik=POLSTR_1M
 ```
 
 - Oczekiwane: JSON z tabelą 300 rat i `sumaOdsetek`, pierwsza rata ~2 494,72 zł (dane z
   pliku dają nieco inną wartość niż liczba kontrolna — patrz uwaga w BRIEF.md).
 
-## Test przez ekran (po Fazie 4)
+## Test przez ekran (po Fazie 7)
 
 - Wypełnij formularz tymi samymi parametrami, kliknij „Policz”, sprawdź ratę i tabelę.
 - Kliknij „Eksport CSV”, sprawdź pobrany plik.

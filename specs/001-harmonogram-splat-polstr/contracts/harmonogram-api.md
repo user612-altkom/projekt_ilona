@@ -9,17 +9,22 @@
 | `pierwszaRata` | tak | `2026-10-10` | YYYY-MM-DD |
 | `marza` | tak | `2.11` | w punktach procentowych |
 | `typRat` | tak | `rowne` \| `malejace` | |
-| `wskaznik` | tak | `polstr-1m` \| `wibor-3m` | |
+| `wskaznik` | tak | `POLSTR_1M` \| `WIBOR_3M` | wybór użytkownika zgodnie z BRIEF.md; zapis
+  klucza zgodny z już istniejącym typem `ParametryKredytu.wskaznik` w kodzie |
 | `nadplaty` | nie | `[{"miesiac":12,"kwota":10000,"tryb":"skroc-okres"}]` | JSON zserializowany w query string |
 
 ## Odpowiedź 200
 
+Przykład dla liczby kontrolnej z BRIEF.md (kwota 400 000 zł, stopa stała 5,66% rocznie, rata
+2 494,72 zł — pierwsza część odsetkowa 400 000 × 0,0566 / 12 = 1 886,67 zł, część kapitałowa
+2 494,72 − 1 886,67 = 608,05 zł):
+
 ```json
 {
   "raty": [
-    { "numer": 1, "data": "2026-10-10", "kapital": 927.19, "odsetki": 1886.67, "rata": 2494.72, "saldo": 399072.81 }
+    { "numer": 1, "data": "2026-10-10", "kapital": 608.05, "odsetki": 1886.67, "rata": 2494.72, "saldo": 399391.95 }
   ],
-  "sumaOdsetek": 348_416.00
+  "sumaOdsetek": 348416.00
 }
 ```
 
