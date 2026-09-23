@@ -89,13 +89,13 @@ od okresu następującego po zmianie; po ostatnim wpisie serii stosowana jest os
 
 ### Testy dla User Story 3
 
-- [ ] T010 [P] [US3] Test zmiany wskaźnika POLSTR 1M w trakcie spłaty w `tests/harmonogram.test.ts`
-- [ ] T011 [P] [US3] Test: po ostatnim wpisie serii stosowana jest ostatnia znana wartość, oraz
+- [x] T010 [P] [US3] Test zmiany wskaźnika POLSTR 1M w trakcie spłaty w `tests/harmonogram.test.ts`
+- [x] T011 [P] [US3] Test: po ostatnim wpisie serii stosowana jest ostatnia znana wartość, oraz
       test kwartalnej zmiany dla WIBOR 3M, w `tests/harmonogram.test.ts`
 
 ### Implementacja dla User Story 3
 
-- [ ] T012 [US3] Zastąpić stałą stopę wywołaniem `stopaNaDzien(wskaznik, dataRaty)` z
+- [x] T012 [US3] Zastąpić stałą stopę wywołaniem `stopaNaDzien(wskaznik, dataRaty)` z
       `src/dane/wskazniki.ts` dla obu typów rat w `src/domena/harmonogram.ts` — depends on T003, T006, T009
 
 **Checkpoint**: US1, US2, US3 działają niezależnie, harmonogram reaguje na zmiany wskaźnika.

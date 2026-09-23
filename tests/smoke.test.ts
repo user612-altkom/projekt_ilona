@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { seriaWskaznika } from '../src/dane/wskazniki';
+import { seriaWskaznika, stopaNaDzien } from '../src/dane/wskazniki';
 import { policzHarmonogram } from '../src/domena/harmonogram';
 
 describe('dane wskaźników z katalogu dane/', () => {
@@ -13,6 +13,32 @@ describe('dane wskaźników z katalogu dane/', () => {
     }
     const daty = seria.map((wpis) => wpis.od);
     expect([...daty].sort()).toEqual(daty);
+  });
+});
+
+describe('stopaNaDzien (bez mocka, prawdziwe dane z dane/*.json)', () => {
+  it.each(['POLSTR_1M', 'WIBOR_3M'] as const)(
+    '%s: po ostatnim wpisie serii zwraca ostatnią znaną wartość',
+    (wskaznik) => {
+      const seria = seriaWskaznika(wskaznik);
+      const ostatni = seria[seria.length - 1]!;
+      expect(stopaNaDzien(wskaznik, '2099-01-01')).toBe(ostatni.stopa);
+    },
+  );
+
+  it.each(['POLSTR_1M', 'WIBOR_3M'] as const)(
+    '%s: przed pierwszym wpisem serii zwraca najwcześniejszą dostępną wartość',
+    (wskaznik) => {
+      const seria = seriaWskaznika(wskaznik);
+      const pierwszy = seria[0]!;
+      expect(stopaNaDzien(wskaznik, '1999-01-01')).toBe(pierwszy.stopa);
+    },
+  );
+
+  it('WIBOR_3M: zwraca wartość właściwą dla konkretnego wpisu (zmiana kwartalna)', () => {
+    const seria = seriaWskaznika('WIBOR_3M');
+    const wpis = seria[1]!;
+    expect(stopaNaDzien('WIBOR_3M', wpis.od)).toBe(wpis.stopa);
   });
 });
 

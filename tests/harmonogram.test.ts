@@ -1,12 +1,17 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { stopaNaDzien } from '../src/dane/wskazniki';
 
 vi.mock('../src/dane/wskazniki', () => ({
-  stopaNaDzien: () => 0.0355,
+  stopaNaDzien: vi.fn(),
 }));
 
 const { policzHarmonogram } = await import('../src/domena/harmonogram');
 
 describe('policzHarmonogram — raty równe, stała stopa (liczba kontrolna z BRIEF.md)', () => {
+  beforeEach(() => {
+    vi.mocked(stopaNaDzien).mockReturnValue(0.0355);
+  });
+
   const parametry = {
     kwotaGr: 400_000_00,
     liczbaRat: 300,
@@ -42,6 +47,10 @@ describe('policzHarmonogram — raty równe, stała stopa (liczba kontrolna z BR
 });
 
 describe('policzHarmonogram — raty malejące', () => {
+  beforeEach(() => {
+    vi.mocked(stopaNaDzien).mockReturnValue(0.0355);
+  });
+
   const parametry = {
     kwotaGr: 400_000_00,
     liczbaRat: 300,
@@ -74,3 +83,46 @@ describe('policzHarmonogram — raty malejące', () => {
     expect(sumaKapitalu).toBe(parametry.kwotaGr);
   });
 });
+
+describe('policzHarmonogram — zmienny wskaźnik w trakcie spłaty (US3)', () => {
+  const dataZmiany = '2027-01-10';
+
+  beforeEach(() => {
+    vi.mocked(stopaNaDzien).mockImplementation((_wskaznik, data: string) => (data < dataZmiany ? 0.03 : 0.05));
+  });
+
+  it('raty równe: rata zmienia się od okresu, w którym wskaźnik się zmienił', () => {
+    const harmonogram = policzHarmonogram({
+      kwotaGr: 100_000_00,
+      liczbaRat: 12,
+      marza: 0.02,
+      typRat: 'rowne',
+      wskaznik: 'POLSTR_1M',
+      pierwszaRata: '2026-10-10',
+      nadplaty: [],
+    });
+    const indeksZmiany = harmonogram.raty.findIndex((rata) => rata.data >= dataZmiany);
+    expect(indeksZmiany).toBeGreaterThan(0);
+    expect(harmonogram.raty[0]!.rataGr).toBe(harmonogram.raty[indeksZmiany - 1]!.rataGr);
+    expect(harmonogram.raty[indeksZmiany]!.rataGr).not.toBe(harmonogram.raty[indeksZmiany - 1]!.rataGr);
+  });
+
+  it('raty malejące: część kapitałowa zostaje stała, zmienia się tylko część odsetkowa/rata', () => {
+    const harmonogram = policzHarmonogram({
+      kwotaGr: 100_000_00,
+      liczbaRat: 12,
+      marza: 0.02,
+      typRat: 'malejace',
+      wskaznik: 'POLSTR_1M',
+      pierwszaRata: '2026-10-10',
+      nadplaty: [],
+    });
+    const kapitalPierwszej = harmonogram.raty[0]!.kapitalGr;
+    for (const rata of harmonogram.raty.slice(0, -1)) {
+      expect(rata.kapitalGr).toBe(kapitalPierwszej);
+    }
+    const indeksZmiany = harmonogram.raty.findIndex((rata) => rata.data >= dataZmiany);
+    expect(harmonogram.raty[indeksZmiany]!.odsetkiGr).not.toBe(harmonogram.raty[indeksZmiany - 1]!.odsetkiGr);
+  });
+});
+
