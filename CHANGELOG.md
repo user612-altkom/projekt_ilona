@@ -34,6 +34,18 @@ Wpisy pogrupowane wg faz z `specs/001-harmonogram-splat-polstr/tasks.md`, po pol
   malejąca rata, ostatnia rata wyrównująca resztę).
 - 3 nowe testy: stała część kapitałowa, malejąca rata, suma kapitału równa kwocie kredytu.
 
+### Faza 5: User Story 3 — zmienna stopa w trakcie spłaty
+
+- `policzRowne` i `policzMalejace` w `src/domena/harmonogram.ts` liczą stopę per okres
+  przez `stopaNaDzien(wskaznik, dataRaty)` zamiast raz na cały harmonogram; dla rat równych
+  rata jest przeliczana od okresu, w którym zmienia się wskaźnik (na bazie pozostałego
+  salda i pozostałych rat).
+- Mock wskaźnika w `tests/harmonogram.test.ts` zamieniony na kontrolowany
+  (`vi.fn` + `mockReturnValue`/`mockImplementation`) i 2 nowe testy dla zmiennego wskaźnika.
+- 5 nowych testów w `tests/smoke.test.ts` bezpośrednio na prawdziwej funkcji
+  `stopaNaDzien` (bez mocka): ostatnia znana wartość po końcu serii, pierwsza wartość przed
+  początkiem serii, wartość dla konkretnego wpisu WIBOR_3M.
+
 ### Narzędzia pomocnicze (poza fazami z tasks.md)
 
 - Subagent `changelog` (aktualizuje ten plik) i `phase-report` (generuje raport z

@@ -53,20 +53,27 @@ function dodajMiesiace(dataIso: string, n: number): string {
 
 function policzRowne(parametry: ParametryKredytu): Harmonogram {
   const { kwotaGr, liczbaRat, marza, wskaznik, pierwszaRata } = parametry;
-  const stopaRoczna = stopaNaDzien(wskaznik, pierwszaRata) + marza;
-  const stopaMiesieczna = stopaRoczna / 12;
-
-  const rataGrStala =
-    stopaMiesieczna === 0
-      ? Math.round(kwotaGr / liczbaRat)
-      : Math.round((kwotaGr * stopaMiesieczna) / (1 - Math.pow(1 + stopaMiesieczna, -liczbaRat)));
 
   const raty: Rata[] = [];
   let saldoGr = kwotaGr;
   let sumaOdsetekGr = 0;
+  let stopaMiesiecznaAktualna: number | null = null;
+  let rataGrStala = 0;
 
   for (let numer = 1; numer <= liczbaRat; numer++) {
     const data = dodajMiesiace(pierwszaRata, numer - 1);
+    const stopaRoczna = stopaNaDzien(wskaznik, data) + marza;
+    const stopaMiesieczna = stopaRoczna / 12;
+    const pozostaleRaty = liczbaRat - numer + 1;
+
+    if (stopaMiesiecznaAktualna === null || stopaMiesieczna !== stopaMiesiecznaAktualna) {
+      stopaMiesiecznaAktualna = stopaMiesieczna;
+      rataGrStala =
+        stopaMiesieczna === 0
+          ? Math.round(saldoGr / pozostaleRaty)
+          : Math.round((saldoGr * stopaMiesieczna) / (1 - Math.pow(1 + stopaMiesieczna, -pozostaleRaty)));
+    }
+
     const odsetkiGr = Math.round(saldoGr * stopaMiesieczna);
     const ostatnia = numer === liczbaRat;
     const kapitalGr = ostatnia ? saldoGr : rataGrStala - odsetkiGr;
@@ -83,8 +90,6 @@ function policzRowne(parametry: ParametryKredytu): Harmonogram {
 
 function policzMalejace(parametry: ParametryKredytu): Harmonogram {
   const { kwotaGr, liczbaRat, marza, wskaznik, pierwszaRata } = parametry;
-  const stopaRoczna = stopaNaDzien(wskaznik, pierwszaRata) + marza;
-  const stopaMiesieczna = stopaRoczna / 12;
   const kapitalStalyGr = Math.floor(kwotaGr / liczbaRat);
 
   const raty: Rata[] = [];
@@ -93,6 +98,8 @@ function policzMalejace(parametry: ParametryKredytu): Harmonogram {
 
   for (let numer = 1; numer <= liczbaRat; numer++) {
     const data = dodajMiesiace(pierwszaRata, numer - 1);
+    const stopaRoczna = stopaNaDzien(wskaznik, data) + marza;
+    const stopaMiesieczna = stopaRoczna / 12;
     const odsetkiGr = Math.round(saldoGr * stopaMiesieczna);
     const ostatnia = numer === liczbaRat;
     const kapitalGr = ostatnia ? saldoGr : kapitalStalyGr;
