@@ -19,3 +19,21 @@ const SERIE: Record<ParametryKredytu['wskaznik'], WpisSerii[]> = {
 export function seriaWskaznika(wskaznik: ParametryKredytu['wskaznik']): WpisSerii[] {
   return SERIE[wskaznik];
 }
+
+/**
+ * Wartość wskaźnika obowiązująca w dniu `data`: najnowszy wpis z `od <= data`.
+ * Przed pierwszym wpisem serii zwraca pierwszą wartość, po ostatnim — ostatnią.
+ */
+export function stopaNaDzien(wskaznik: ParametryKredytu['wskaznik'], data: string): number {
+  const seria = seriaWskaznika(wskaznik);
+  let wybrany = seria[0];
+  if (!wybrany) throw new Error(`brak danych serii dla wskaznika ${wskaznik}`);
+  for (const wpis of seria) {
+    if (wpis.od <= data) {
+      wybrany = wpis;
+    } else {
+      break;
+    }
+  }
+  return wybrany.stopa;
+}
