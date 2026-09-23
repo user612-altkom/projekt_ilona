@@ -72,3 +72,19 @@ T0xx, brak commita dedykowanego tej fazie.
   WIBOR 3M) pokryte testami T010-T011, `npm run typecheck` bez błędów
 - Suggested PR title (po polsku): faza 5: zmienna stopa ze wskaźnika w trakcie spłaty
 
+---
+
+## Faza 6: Nadpłaty kredytu (User Story 4)
+
+- Completed tasks: T013-T016 (4)
+- Changed files: `src/domena/harmonogram.ts` (obsługa `nadplaty` w obu trybach),
+  `tests/harmonogram.test.ts` (testy trybów „obniż ratę” i „skróć okres”),
+  `specs/001-harmonogram-splat-polstr/tasks.md`, `CHANGELOG.md`,
+  `.github/agents/phase-report.agent.md` (1 commit na branchu `faza-6-nadplaty`: `4fdad80`
+  „faza 6: nadplaty w trybie obniz-rate i skroc-okres”, niescalony)
+- Tests: PASS, 19/19 (2 pliki testowe), `npm run typecheck` bez błędów
+- spec.md checkpoint: met — oba scenariusze z sekcji User Story 4 (nadpłata w trybie „obniż
+  ratę” pomniejsza saldo i przelicza ratę przy niezmienionej liczbie rat; nadpłata w trybie
+  „skróć okres” skraca harmonogram przy niezmienionej racie) pokryte testami T013-T014
+- Suggested PR title (po polsku): faza 6: nadpłaty w trybie obniż ratę i skróć okres
+

@@ -46,6 +46,15 @@ Wpisy pogrupowane wg faz z `specs/001-harmonogram-splat-polstr/tasks.md`, po pol
   `stopaNaDzien` (bez mocka): ostatnia znana wartość po końcu serii, pierwsza wartość przed
   początkiem serii, wartość dla konkretnego wpisu WIBOR_3M.
 
+### Faza 6
+
+- Scalenie `policzRowne`/`policzMalejace` w jedną funkcję `policzHarmonogramDlaTypu` w
+  `src/domena/harmonogram.ts`, obsługującą nadpłaty: tryb „obniz-rate” przelicza
+  ratę/część kapitałową od kolejnego okresu przy niezmienionej liczbie pozostałych rat,
+  tryb „skroc-okres” zostawia ratę bez zmian i kończy harmonogram wcześniej, gdy saldo
+  spadnie do zera.
+- 2 nowe testy w `tests/harmonogram.test.ts` (po jednym na każdy tryb nadpłaty).
+
 ### Narzędzia pomocnicze (poza fazami z tasks.md)
 
 - Subagent `changelog` (aktualizuje ten plik) i `phase-report` (generuje raport z
