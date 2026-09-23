@@ -4,11 +4,12 @@
 
 import { stopaNaDzien } from '../dane/wskazniki';
 
-/** Jedna nadpłata: miesiąc (numer raty), od którego obowiązuje, kwota w groszach i tryb. */
+/** Jedna nadpłata: miesiąc (numer raty), od którego obowiązuje, kwota w groszach i tryb.
+ *  Brak `tryb` oznacza „skróć okres” (CR-A, dodatkowe_wymagania.md). */
 export interface Nadplata {
   miesiac: number;
   kwotaGr: number;
-  tryb: 'obniz-rate' | 'skroc-okres';
+  tryb?: 'obniz-rate' | 'skroc-okres';
 }
 
 export interface ParametryKredytu {
@@ -92,11 +93,12 @@ function policzHarmonogramDlaTypu(parametry: ParametryKredytu): Harmonogram {
 
     let nadplataGr = 0;
     for (const nadplata of nadplatyPoMiesiacu.get(numer) ?? []) {
+      const tryb = nadplata.tryb ?? 'skroc-okres';
       const kwotaNadplatyGr = Math.min(nadplata.kwotaGr, saldoGr);
       nadplataGr += kwotaNadplatyGr;
       saldoGr -= kwotaNadplatyGr;
 
-      if (saldoGr > 0 && nadplata.tryb === 'obniz-rate') {
+      if (saldoGr > 0 && tryb === 'obniz-rate') {
         const pozostaleRatyPoNadplacie = liczbaRat - numer;
         if (pozostaleRatyPoNadplacie > 0) {
           if (typRat === 'rowne') {

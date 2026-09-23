@@ -173,4 +173,60 @@ describe('policzHarmonogram — nadpłaty (US4)', () => {
   });
 });
 
+describe('policzHarmonogram — CR-A: wybór trybu nadpłaty (dodatkowe_wymagania.md)', () => {
+  // Kredyt 300 000 zł, 240 rat równych, WIBOR 3M 4,55% + marża 2,11 pp = 6,66% rocznie.
+  // Nadpłata 30 000 zł po zaksięgowaniu 1. raty.
+  beforeEach(() => {
+    vi.mocked(stopaNaDzien).mockReturnValue(0.0455);
+  });
+
+  const parametry = {
+    kwotaGr: 300_000_00,
+    liczbaRat: 240,
+    marza: 0.0211,
+    typRat: 'rowne' as const,
+    wskaznik: 'WIBOR_3M' as const,
+    pierwszaRata: '2026-10-10',
+  };
+
+  it('rata przed nadpłatą wynosi 2 265,07 zł', () => {
+    const harmonogram = policzHarmonogram({ ...parametry, nadplaty: [] });
+    expect(harmonogram.raty[0]!.rataGr).toBe(226_507);
+  });
+
+  it('brak trybu oznacza „skróć okres” (kryterium akceptacji 1)', () => {
+    const zTrybem = policzHarmonogram({
+      ...parametry,
+      nadplaty: [{ miesiac: 1, kwotaGr: 30_000_00, tryb: 'skroc-okres' }],
+    });
+    const bezTrybu = policzHarmonogram({
+      ...parametry,
+      nadplaty: [{ miesiac: 1, kwotaGr: 30_000_00 }],
+    });
+    expect(bezTrybu.raty.length).toBe(zTrybem.raty.length);
+    expect(bezTrybu.raty.at(-1)!.rataGr).toBe(zTrybem.raty.at(-1)!.rataGr);
+  });
+
+  it('„obniż ratę”: saldo po 1. racie i nadpłacie 269 399,93 zł, nowa rata od 2. raty 2 038,11 zł, 240 rat razem', () => {
+    const harmonogram = policzHarmonogram({
+      ...parametry,
+      nadplaty: [{ miesiac: 1, kwotaGr: 30_000_00, tryb: 'obniz-rate' }],
+    });
+    expect(harmonogram.raty).toHaveLength(240);
+    expect(harmonogram.raty[0]!.saldoGr).toBe(26_939_993);
+    expect(harmonogram.raty[1]!.rataGr).toBe(203_811);
+  });
+
+  it('„skróć okres”: rata bez zmian 2 265,07 zł, 196 rat razem, ostatnia rata wyrównująca 2 200,53 zł', () => {
+    const harmonogram = policzHarmonogram({
+      ...parametry,
+      nadplaty: [{ miesiac: 1, kwotaGr: 30_000_00, tryb: 'skroc-okres' }],
+    });
+    expect(harmonogram.raty).toHaveLength(196);
+    expect(harmonogram.raty[1]!.rataGr).toBe(226_507);
+    expect(harmonogram.raty.at(-1)!.rataGr).toBe(220_053);
+  });
+});
+
+
 
