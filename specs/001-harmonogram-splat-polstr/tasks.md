@@ -68,12 +68,12 @@ identyczna w każdej racie, rata maleje w czasie.
 
 ### Testy dla User Story 2
 
-- [ ] T008 [P] [US2] Test raty malejącej (stała część kapitałowa, malejąca rata) w
+- [x] T008 [P] [US2] Test raty malejącej (stała część kapitałowa, malejąca rata) w
       `tests/harmonogram.test.ts`
 
 ### Implementacja dla User Story 2
 
-- [ ] T009 [US2] Zaimplementować `policzHarmonogram` dla `typRat: 'malejace'` w
+- [x] T009 [US2] Zaimplementować `policzHarmonogram` dla `typRat: 'malejace'` w
       `src/domena/harmonogram.ts` — depends on T002
 
 **Checkpoint**: US1 i US2 działają niezależnie od siebie.

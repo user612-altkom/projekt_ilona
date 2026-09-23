@@ -81,9 +81,38 @@ function policzRowne(parametry: ParametryKredytu): Harmonogram {
   return { raty, sumaOdsetekGr };
 }
 
+function policzMalejace(parametry: ParametryKredytu): Harmonogram {
+  const { kwotaGr, liczbaRat, marza, wskaznik, pierwszaRata } = parametry;
+  const stopaRoczna = stopaNaDzien(wskaznik, pierwszaRata) + marza;
+  const stopaMiesieczna = stopaRoczna / 12;
+  const kapitalStalyGr = Math.floor(kwotaGr / liczbaRat);
+
+  const raty: Rata[] = [];
+  let saldoGr = kwotaGr;
+  let sumaOdsetekGr = 0;
+
+  for (let numer = 1; numer <= liczbaRat; numer++) {
+    const data = dodajMiesiace(pierwszaRata, numer - 1);
+    const odsetkiGr = Math.round(saldoGr * stopaMiesieczna);
+    const ostatnia = numer === liczbaRat;
+    const kapitalGr = ostatnia ? saldoGr : kapitalStalyGr;
+    const rataGr = kapitalGr + odsetkiGr;
+
+    saldoGr -= kapitalGr;
+    sumaOdsetekGr += odsetkiGr;
+
+    raty.push({ numer, data, kapitalGr, odsetkiGr, nadplataGr: 0, rataGr, saldoGr });
+  }
+
+  return { raty, sumaOdsetekGr };
+}
+
 export function policzHarmonogram(parametry: ParametryKredytu): Harmonogram {
   if (parametry.typRat === 'rowne') {
     return policzRowne(parametry);
+  }
+  if (parametry.typRat === 'malejace') {
+    return policzMalejace(parametry);
   }
   throw new Error(`nie zaimplementowano: policzHarmonogram (${parametry.liczbaRat} rat, ${parametry.typRat})`);
 }
