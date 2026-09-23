@@ -6,6 +6,8 @@ Format oparty o [Keep a Changelog](https://keepachangelog.com/), wpisy po polsku
 
 ### Dodano
 
+- Fundament domeny: typy `Nadplata`/`Rata`/`Harmonogram`, funkcję `stopaNaDzien` w `src/dane/wskazniki.ts` oraz implementację `policzHarmonogram` dla rat równych ze stałą stopą w `src/domena/harmonogram.ts`, podłączoną do `app/api/harmonogram/route.ts` (konwersja grosze->złote); testy z liczbą kontrolną z `BRIEF.md` oraz FR-011 (eksport CSV z CLI) i zadanie T022 w spec-kit.
+- Funkcję `policzMalejace` w `src/domena/harmonogram.ts` liczącą raty malejące ze stałą częścią kapitałową, wraz z 3 nowymi testami.
 - Subagenta dokumentującego zmiany (`changelog.agent.md`) oraz hook `PostToolUse`, który po
   wykryciu `git commit` w danych wejściowych narzędzia wstrzykuje przypomnienie o uruchomieniu
   tego subagenta (hook nie wywołuje go automatycznie — to tylko deterministyczne przypomnienie).
