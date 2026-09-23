@@ -14,6 +14,10 @@ Format oparty o [Keep a Changelog](https://keepachangelog.com/), wpisy po polsku
 - Subagenta `phase-report.agent.md` generującego raport z zakończonej fazy `tasks.md`.
 - Regułę w `.github/copilot-instructions.md` o spójnych angielskich nazwach plików customizacji (agentów, skilli, promptów).
 
+### Zmieniono
+
+- Hook `.github/hooks/scripts/po-commicie-changelog.ps1` wykrywa teraz też commity fazowe („faza N: ...") i zwraca `decision: block` zamiast samego `systemMessage`, żeby wymusić uruchomienie subagentów changelog i phase-report zamiast tylko przypominać o nich.
+
 ### Naprawiono
 
 - Błędny przykład liczbowy w `contracts/harmonogram-api.md` (kapitał + odsetki nie sumowały się do raty).
