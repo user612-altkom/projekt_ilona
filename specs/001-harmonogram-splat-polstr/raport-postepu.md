@@ -22,6 +22,14 @@ Najnowszy raport na dole.
 
 ---
 
+## Faza 1: Setup
+
+Pusta z definicji w `tasks.md` — szkielet Next.js, `package.json`, `tsconfig.json` i pliki
+`dane/*.json` pochodzą już z szablonu startowego, nic nie trzeba było inicjować. Zero zadań
+T0xx, brak commita dedykowanego tej fazie.
+
+---
+
 ## Faza 2 i Faza 3: Fundament oraz harmonogram rat równych (User Story 1) 🎯 MVP
 
 - Completed tasks: T001-T007, T006a (8)
