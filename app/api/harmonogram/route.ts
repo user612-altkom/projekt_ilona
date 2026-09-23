@@ -21,18 +21,18 @@ function parsujNadplaty(szukane: URLSearchParams): Nadplata[] | string {
 
   const nadplaty: Nadplata[] = [];
   for (const wpis of dane) {
-    const tryb = (wpis as Record<string, unknown> | null)?.tryb;
+    if (typeof wpis !== 'object' || wpis === null) {
+      return 'nadplaty: każdy wpis to { miesiac: liczba, kwota: liczba, tryb?: "obniz-rate" | "skroc-okres" (domyślnie "skroc-okres") }';
+    }
+    const { miesiac, kwota, tryb } = wpis as Record<string, unknown>;
     if (
-      typeof wpis !== 'object' ||
-      wpis === null ||
-      typeof (wpis as Record<string, unknown>).miesiac !== 'number' ||
-      typeof (wpis as Record<string, unknown>).kwota !== 'number' ||
+      typeof miesiac !== 'number' ||
+      typeof kwota !== 'number' ||
       (tryb !== undefined && tryb !== 'obniz-rate' && tryb !== 'skroc-okres')
     ) {
       return 'nadplaty: każdy wpis to { miesiac: liczba, kwota: liczba, tryb?: "obniz-rate" | "skroc-okres" (domyślnie "skroc-okres") }';
     }
-    const { miesiac, kwota } = wpis as { miesiac: number; kwota: number };
-    nadplaty.push({ miesiac, kwotaGr: Math.round(kwota * 100), tryb: tryb as 'obniz-rate' | 'skroc-okres' | undefined });
+    nadplaty.push({ miesiac, kwotaGr: Math.round(kwota * 100), tryb });
   }
   return nadplaty;
 }
