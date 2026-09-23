@@ -25,3 +25,5 @@ Ten plik czyta Copilot w czacie, w CLI i w code review. Trzymaj się poniższych
 - Nie edytuj plików w `dane/` bez wyraźnego polecenia. Testy je wczytują.
 - Nie edytuj `.specify/` ani `.github/skills/` poza tym, co robią skille spec-kit.
 - Przed zgłoszeniem gotowości uruchom `npm test`, `npm run typecheck` i `npm run build` i pokaż wynik. Vercel buduje produkcję tym samym `next build`, więc czerwony build lokalnie to czerwony deploy.
+- Po każdym `git commit` i `git push` wyświetl krótki komunikat (hash commita, jednolinijkowy opis, czy push się udał).
+- Przed `gh pr create` zapytaj o potwierdzenie i poczekaj na zgodę, nie otwieraj PR automatycznie.
