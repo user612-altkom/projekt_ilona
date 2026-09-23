@@ -60,6 +60,22 @@ T0xx, brak commita dedykowanego tej fazie.
 
 ---
 
+## Faza końcowa: Polish
+
+- Completed tasks: T020-T022 (3)
+- Changed files: `CHANGELOG.md`, `specs/001-harmonogram-splat-polstr/tasks.md`,
+  `skrypty/eksport-csv.ps1` (nowy)
+- Tests: PASS, 19/19; `npm run typecheck` i `npm run lint` czyste; `npm run build` przechodzi
+- spec.md checkpoint: met — liczba kontrolna (rata 2 495,85 zł) zweryfikowana na produkcji
+  (Vercel, https://projekt-ilona.vercel.app) zgodnie ze scenariuszem z `quickstart.md`; FR-011
+  (eksport CSV) zrealizowane skryptem CLI zamiast przycisku w UI
+- Suggested PR title (po polsku): faza końcowa: polish z eksportem CSV i weryfikacją liczby
+  kontrolnej na produkcji
+
+To ostatnia faza z `tasks.md` — MVP jest kompletny.
+
+---
+
 ## Faza 5: Zmienna stopa ze wskaźnika w trakcie spłaty (User Story 3)
 
 - Completed tasks: T010-T012 (3)

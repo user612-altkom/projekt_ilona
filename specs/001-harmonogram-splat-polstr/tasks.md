@@ -149,13 +149,14 @@ ratę 2 494,72 zł oraz umożliwia pobranie CSV.
 
 ## Faza końcowa: Polish
 
-- [ ] T020 [P] Uruchomić `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` i
+- [x] T020 [P] Uruchomić `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` i
       poprawić ewentualne błędy
-- [ ] T021 Przejść scenariusze z `quickstart.md` od początku do końca i potwierdzić liczbę
+- [x] T021 Przejść scenariusze z `quickstart.md` od początku do końca i potwierdzić liczbę
       kontrolną na produkcji (Vercel)
-- [ ] T022 [P] Dodać skrypt `skrypty/eksport-csv.ts` (lub `.ps1`, do ustalenia przy implementacji):
-      wywołuje `policzHarmonogram` z parametrów CLI i zapisuje tabelę rat do pliku `.csv`, tym
-      samym formatem kolumn co ekran/API (FR-011) — depends on T006, bez nowych zależności npm
+- [x] T022 [P] Dodać skrypt `skrypty/eksport-csv.ps1` (JSON `.ts` odpadł — natywne usuwanie
+      typów w Node gubi się na bezrozszerzeniowych importach wewnętrznych `src/`; PowerShell
+      woła `GET /api/harmonogram` na lokalnie uruchomionym serwerze i zapisuje tabelę rat do
+      pliku `.csv`, tym samym formatem kolumn co ekran/API (FR-011), bez nowych zależności npm
 
 ---
 

@@ -66,6 +66,17 @@ Wpisy pogrupowane wg faz z `specs/001-harmonogram-splat-polstr/tasks.md`, po pol
   Design użyto szkicu wygenerowanego bezpośrednio przez agenta na wyraźne polecenie
   użytkownika.
 
+### Faza końcowa
+
+- `skrypty/eksport-csv.ps1` (FR-011, eksport CSV z CLI): woła lokalnie uruchomiony
+  `GET /api/harmonogram` i zapisuje tabelę rat do pliku `.csv` w tym samym formacie kolumn
+  co ekran/API, bez nowych zależności npm.
+- Skrypt jest w PowerShellu, nie TypeScript: natywne usuwanie typów w Node nie działa przy
+  bezrozszerzeniowych importach w `src/` (styl „bundler” z Next.js), niekompatybilnych z
+  natywną rezolucją modułów ESM w Node.
+- Zweryfikowano lint/typecheck/test/build lokalnie oraz liczbę kontrolną na produkcji
+  (Vercel, https://projekt-ilona.vercel.app).
+
 ### Narzędzia pomocnicze (poza fazami z tasks.md)
 
 - Subagent `changelog` (aktualizuje ten plik) i `phase-report` (generuje raport z
