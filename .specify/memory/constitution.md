@@ -1,50 +1,59 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Harmonogram na POLSTR Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Architektura Next.js App Router z podziałem odpowiedzialności
+Aplikacja MUSI być oparta o Next.js App Router. Route handler `app/api/harmonogram/route.ts`
+JEST cienki: parsuje parametry z query string, woła moduł domenowy i zwraca JSON, bez żadnej
+logiki obliczeniowej. Ekran `app/page.tsx` JEST komponentem `'use client'` stylowanym
+Tailwindem, bez bibliotek UI, i pobiera dane wyłącznie z `/api/harmonogram`.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Domena jako czyste funkcje (NON-NEGOTIABLE)
+Cały kod w `src/domena/` MUSI być zbiorem czystych funkcji: bez importów z React, bez
+operacji I/O, bez `Date.now()` ani innych źródeł niedeterminizmu. Wszystkie obliczenia
+harmonogramu spłat mieszkają wyłącznie tam, co czyni je w pełni testowalnymi w izolacji.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. TypeScript Strict bez kompromisów
+Projekt MUSI korzystać z `tsconfig.json` w trybie strict. Użycie `any` oraz `@ts-ignore`
+jest zabronione. Niejasne typy trzeba doprecyzować zamiast obchodzić kompilator.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Test-First, TDD (NON-NEGOTIABLE)
+Dla każdej zmiany logiki obliczeniowej test powstaje przed implementacją i musi zawierać
+liczbę kontrolną. Testy w `tests/` (vitest) obejmują wyłącznie moduły domeny i danych
+(`src/domena/`, `src/dane/`) — ekran nie ma testów jednostkowych.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Precyzja finansowa i jawne zaokrąglanie
+Kwoty pieniężne MUSZĄ być reprezentowane jako liczby całkowite w groszach, chyba że projekt
+podejmie jedną jawną i udokumentowaną decyzję o miejscu zaokrąglania. Zaokrąglanie odbywa się
+w jednym, wskazanym miejscu w kodzie, nigdy rozproszone po module.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Minimalizm zależności
+Nowe zależności npm wymagają jednozdaniowego uzasadnienia w opisie PR i zgody przed
+dodaniem. Domyślnie korzystamy z tego, co już jest w `package.json` szablonu.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Stos technologiczny
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Next.js (App Router) + TypeScript + Tailwind CSS do stylów ekranu, vitest do testów domeny
+i danych, dane wskaźników POLSTR 1M i WIBOR 3M wczytywane z `dane/*.json` przez
+`src/dane/wskazniki.ts`. Produkcja wdrażana na Vercel z GitHuba; `npm run build` jest tym
+samym poleceniem, które uruchamia Vercel i workflow GitHub Actions.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Proces wytwarzania
+
+Praca odbywa się fazami z `tasks.md`, jeden PR na fazę. Po zakończeniu fazy agent zatrzymuje
+się i pokazuje diff, nie zaczyna kolejnej fazy bez wyraźnego polecenia. Pliki w `dane/` nie są
+edytowane bez wyraźnego polecenia, bo wczytują je testy. Katalogi `.specify/` i
+`.github/skills/` nie są edytowane poza tym, co robią skille spec-kit. Dokumenty, komentarze
+w kodzie i komunikaty commitów są po polsku, bez skrótów w nazwach domenowych. Przed
+zgłoszeniem gotowości uruchamiane są `npm test`, `npm run typecheck` i `npm run build`.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Ta konstytucja jest nadrzędna wobec innych praktyk projektowych. Zmiany wymagają aktualizacji
+tego pliku przez `/speckit-constitution`, z podniesieniem wersji zgodnie z zasadami semver
+(MAJOR — usunięcie lub redefinicja zasady, MINOR — nowa zasada lub istotne rozszerzenie,
+PATCH — doprecyzowanie treści). Każdy PR i każde review MUSI weryfikować zgodność z zasadami
+powyżej; złożoność wykraczająca poza nie wymaga uzasadnienia w opisie PR. Bieżące wytyczne
+operacyjne (bramki, komendy, kolejność faz) są w `AGENTS.md` i `KARTA.md`.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-09-23 | **Last Amended**: 2026-09-23
