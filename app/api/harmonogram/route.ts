@@ -1,12 +1,40 @@
 import { NextResponse } from 'next/server';
-import { policzHarmonogram, type ParametryKredytu } from '../../../src/domena/harmonogram';
+import { policzHarmonogram, type Harmonogram, type Nadplata, type ParametryKredytu } from '../../../src/domena/harmonogram';
 
 // Route handler jest cienki: parsuje parametry z query string, woła domenę, zwraca JSON.
-// Żadnych obliczeń finansowych w tym pliku. Przeliczenie jednostek wejścia
-// (złote na grosze, punkty procentowe na ułamek) to część parsowania kontraktu API.
+// Żadnych obliczeń finansowych w tym pliku. Przeliczenie jednostek wejścia i wyjścia
+// (grosze na złote, punkty procentowe na ułamek) to część parsowania kontraktu API, nie logika.
 
 const PRZYKLAD =
   '/api/harmonogram?kwota=400000&liczbaRat=300&marza=2.11&wskaznik=POLSTR_1M&typRat=rowne&pierwszaRata=2026-10-01';
+
+function parsujNadplaty(szukane: URLSearchParams): Nadplata[] | string {
+  const surowe = szukane.get('nadplaty');
+  if (!surowe) return [];
+  let dane: unknown;
+  try {
+    dane = JSON.parse(surowe);
+  } catch {
+    return 'nadplaty: niepoprawny JSON';
+  }
+  if (!Array.isArray(dane)) return 'nadplaty: oczekiwano tablicy obiektów';
+
+  const nadplaty: Nadplata[] = [];
+  for (const wpis of dane) {
+    if (
+      typeof wpis !== 'object' ||
+      wpis === null ||
+      typeof (wpis as Record<string, unknown>).miesiac !== 'number' ||
+      typeof (wpis as Record<string, unknown>).kwota !== 'number' ||
+      ((wpis as Record<string, unknown>).tryb !== 'obniz-rate' && (wpis as Record<string, unknown>).tryb !== 'skroc-okres')
+    ) {
+      return 'nadplaty: każdy wpis to { miesiac: liczba, kwota: liczba, tryb: "obniz-rate" | "skroc-okres" }';
+    }
+    const { miesiac, kwota, tryb } = wpis as { miesiac: number; kwota: number; tryb: 'obniz-rate' | 'skroc-okres' };
+    nadplaty.push({ miesiac, kwotaGr: Math.round(kwota * 100), tryb });
+  }
+  return nadplaty;
+}
 
 function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
   const kwota = Number(szukane.get('kwota'));
@@ -23,6 +51,9 @@ function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
   if (typRat !== 'rowne' && typRat !== 'malejace') return 'typRat: rowne albo malejace';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(pierwszaRata)) return 'pierwszaRata: data YYYY-MM-DD';
 
+  const nadplaty = parsujNadplaty(szukane);
+  if (typeof nadplaty === 'string') return nadplaty;
+
   return {
     kwotaGr: Math.round(kwota * 100),
     liczbaRat,
@@ -30,6 +61,23 @@ function parsujParametry(szukane: URLSearchParams): ParametryKredytu | string {
     wskaznik,
     typRat,
     pierwszaRata,
+    nadplaty,
+  };
+}
+
+/** Konwertuje wyjście domeny (grosze) na kontrakt API (złote, 2 miejsca) — samo rzutowanie jednostki. */
+function doJson(harmonogram: Harmonogram) {
+  const naZlote = (gr: number) => Math.round(gr) / 100;
+  return {
+    raty: harmonogram.raty.map((rata) => ({
+      numer: rata.numer,
+      data: rata.data,
+      kapital: naZlote(rata.kapitalGr),
+      odsetki: naZlote(rata.odsetkiGr),
+      rata: naZlote(rata.rataGr),
+      saldo: naZlote(rata.saldoGr),
+    })),
+    sumaOdsetek: naZlote(harmonogram.sumaOdsetekGr),
   };
 }
 
@@ -41,7 +89,7 @@ export function GET(request: Request) {
 
   try {
     const harmonogram = policzHarmonogram(parametry);
-    return NextResponse.json(harmonogram);
+    return NextResponse.json(doJson(harmonogram));
   } catch (blad) {
     const komunikat = blad instanceof Error ? blad.message : String(blad);
     if (komunikat.startsWith('nie zaimplementowano')) {

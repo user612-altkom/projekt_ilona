@@ -19,11 +19,11 @@ istnieją z szablonu. Nic do zainicjowania.
 
 **Cel**: wspólne typy wejścia/wyjścia używane przez każdą historię.
 
-- [ ] T001 Rozszerzyć `ParametryKredytu` w `src/domena/harmonogram.ts` o pole `nadplaty: Nadplata[]`
+- [x] T001 Rozszerzyć `ParametryKredytu` w `src/domena/harmonogram.ts` o pole `nadplaty: Nadplata[]`
       i zdefiniować typ `Nadplata { miesiac: number; kwotaGr: number; tryb: 'obniz-rate' | 'skroc-okres' }`
-- [ ] T002 Zdefiniować typy wyjściowe `Rata` i `Harmonogram` w `src/domena/harmonogram.ts`
+- [x] T002 Zdefiniować typy wyjściowe `Rata` i `Harmonogram` w `src/domena/harmonogram.ts`
       wg pól z `data-model.md` (numer, data, kapitalGr, odsetkiGr, rataGr, saldoGr, sumaOdsetekGr)
-- [ ] T003 [P] Dodać w `src/dane/wskazniki.ts` funkcję `stopaNaDzien(wskaznik, data)` zwracającą
+- [x] T003 [P] Dodać w `src/dane/wskazniki.ts` funkcję `stopaNaDzien(wskaznik, data)` zwracającą
       wpis serii obowiązujący na daną datę (najnowszy `od <= data`; ostatni wpis po końcu serii)
 
 **Checkpoint**: typy i dostęp do serii wskaźnika gotowe — można zacząć User Story 1.
@@ -40,19 +40,19 @@ stopą 5,66% rocznie zwraca ratę 2 494,72 zł (±0,05 zł) i ostatnią ratę 2 
 
 ### Testy dla User Story 1 (napisać najpierw, upewnić się że nie przechodzą)
 
-- [ ] T004 [P] [US1] Test liczby kontrolnej (rata równa, stopa stała) w `tests/harmonogram.test.ts` —
+- [x] T004 [P] [US1] Test liczby kontrolnej (rata równa, stopa stała) w `tests/harmonogram.test.ts` —
       stałą wartość wskaźnika 0,0355 uzyskać przez zamockowanie `src/dane/wskazniki.ts`
       (`vi.mock`), nie przez nowy parametr wejściowy (patrz spec.md, sekcja Assumptions)
-- [ ] T005 [P] [US1] Test: suma części kapitałowych wszystkich rat równa kwocie kredytu co do
+- [x] T005 [P] [US1] Test: suma części kapitałowych wszystkich rat równa kwocie kredytu co do
       grosza, w `tests/harmonogram.test.ts`
 
 ### Implementacja dla User Story 1
 
-- [ ] T006 [US1] Zaimplementować `policzHarmonogram` dla `typRat: 'rowne'` ze stałą stopą
+- [x] T006 [US1] Zaimplementować `policzHarmonogram` dla `typRat: 'rowne'` ze stałą stopą
       (bez zależności od `src/dane/wskazniki.ts`) w `src/domena/harmonogram.ts` — depends on T002
-- [ ] T006a [US1] Zastąpić `tests/smoke.test.ts` (oczekuje wyjątku „nie zaimplementowano”)
+- [x] T006a [US1] Zastąpić `tests/smoke.test.ts` (oczekuje wyjątku „nie zaimplementowano”)
       testem zgodnym z działającą implementacją, żeby `npm test` przechodziło po T006 — depends on T006
-- [ ] T007 [US1] Podłączyć wynik w `app/api/harmonogram/route.ts`: zamiast 501 zwracać JSON z
+- [x] T007 [US1] Podłączyć wynik w `app/api/harmonogram/route.ts`: zamiast 501 zwracać JSON z
       `policzHarmonogram(...)` — depends on T006
 
 **Checkpoint**: User Story 1 działa samodzielnie i przechodzi testy z liczbą kontrolną.
@@ -152,6 +152,9 @@ ratę 2 494,72 zł oraz umożliwia pobranie CSV.
       poprawić ewentualne błędy
 - [ ] T021 Przejść scenariusze z `quickstart.md` od początku do końca i potwierdzić liczbę
       kontrolną na produkcji (Vercel)
+- [ ] T022 [P] Dodać skrypt `skrypty/eksport-csv.ts` (lub `.ps1`, do ustalenia przy implementacji):
+      wywołuje `policzHarmonogram` z parametrów CLI i zapisuje tabelę rat do pliku `.csv`, tym
+      samym formatem kolumn co ekran/API (FR-011) — depends on T006, bez nowych zależności npm
 
 ---
 
